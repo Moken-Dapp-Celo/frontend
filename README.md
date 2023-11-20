@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-- Clone this repository: git clone `https://github.com/Moken-DApp-Zeniq/frontend`
+- Clone this repository: `git clone git@github.com:Moken-Dapp-Celo/frontend.git`
 - Run in the terminal `npm i`
 - Run the development server `npm run dev`
 - Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
