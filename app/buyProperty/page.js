@@ -17,7 +17,8 @@ export default function BuyProperty() {
 
   useEffect(() => {
     const initialize = async () => {
-      const contractAddress = "0x166277B8ec55AA28C38E986134DB28F25bF731a4";
+      const contractAddress = selectedRental?.contract;
+      console.log("contractAddress", contractAddress);
       const contractABI = Property.abi;
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -33,11 +34,17 @@ export default function BuyProperty() {
       console.log("selectedRental is null");
       router.push("/");
     }
+
+    console.log("selectedRental", selectedRental);
   }, [selectedRental]);
 
   const buy = async () => {
     try {
-      const result = await contract.booking(date);
+      const date_obj = new Date(date);
+      const day_of_the_year = Math.floor(
+        (date_obj - new Date(date_obj.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24
+      );
+      const result = await contract.booking(day_of_the_year);
       if (result) {
         // Booking was successful
         setFeedback("Your booking was successful");
@@ -53,54 +60,41 @@ export default function BuyProperty() {
   };
 
   return (
-    <div>
+    <div >
       <Navbar />
-      <h1 className="m-16 font-bold text-3xl">
-        Purchase property access token
-      </h1>
-      {/* Display feedback message if available */}
-      {feedback && (
-        <div className={feedback === "Your booking was successful" ? "text-green-500 ml-16" : "text-red-500 ml-16"}>
-          {feedback}
-        </div>
-      )}
-      <div className="flex justify-between mt-16 mx-24">
-        <div>
-          <div>
-            <p className="font-semibold text-xl">Date</p>
-            <input
-              type="string"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="mt-6 py-3 w-96 px-2 rounded-lg border border-black hover:cursor-pointer"
-            />
+      <div className="flex flex-col justify-center items-center mx-6 md:mx-36 my-8 md:my-16">
+        <h1 className="font-bold text-2xl">
+          Purchase property access token
+        </h1>
+        {/* Display feedback message if available */}
+        {feedback && (
+          <div className={feedback === "Your booking was successful" ? "text-green-500 ml-16" : "text-red-500 ml-16"}>
+            {feedback}
           </div>
-          <div className="mt-8">
-            <p className="font-semibold text-xl">ID</p>
-            <input
-              type="text"
-              className="mt-6 py-3 w-96 px-2 rounded-lg border border-black"
-            />
+        )}
+        <div className="flex justify-between mt-8 mx-6">
+          <div className="">
+            <div className="">
+              <p className="font-semibold text-xl">Date</p>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="mt-2 w-80 py-2 px-1 rounded-lg border border-black hover:cursor-pointer"
+              />
+            </div>
+            <div className="mt-8 ml-4">
+              <h1 className="text-2xl font-bold">
+                Price: <span className="text-green-500">${selectedRental?.price}</span>
+              </h1>
+            </div>
+            <button
+              className="py-4 w-80 rounded-md font-bold mt-12 bg-black text-white hover:scale-95 duration-300"
+              onClick={buy}
+            >
+              Buy token
+            </button>
           </div>
-          <div className="mt-8">
-            <h1 className="text-2xl font-bold">
-              Price: USD {selectedRental?.price}
-            </h1>
-          </div>
-          <button
-            className="w-96 py-4 rounded-md font-bold mt-12 bg-black text-white hover:scale-95 duration-300"
-            onClick={buy}
-          >
-            Buy token
-          </button>
-        </div>
-        <div>
-          <Image
-            src="/Illustration2.svg"
-            alt="Illustration"
-            width={850}
-            height={550}
-          />
         </div>
       </div>
     </div>

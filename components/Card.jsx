@@ -3,7 +3,8 @@ import Image from 'next/image';
 import { useSelectedRental } from '../contexts/rental';
 import { useRouter } from 'next/navigation';
 
-const Card = ({ price, address, size, bedrooms, spots, type, image }) => {
+
+const Card = ({ price, address, size, bedrooms, type, image, contract}) => {
   const { setSelectedRental } = useSelectedRental();
   const router = useRouter();
 
@@ -15,12 +16,18 @@ const Card = ({ price, address, size, bedrooms, spots, type, image }) => {
       address,
       bedrooms,
       size,
-      spots,
-
+      contract
     });
 
     router.push('/buyProperty');
   };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(address).then(() => {
+      console.log("Address copied to clipboard");
+    });
+  };
+
 
   return (
     <div
@@ -30,10 +37,15 @@ const Card = ({ price, address, size, bedrooms, spots, type, image }) => {
       <img src={image} className="w-full" width={200} height={200} alt={type} />
       <div className="px-4 pt-4 gap-2 flex flex-col">
         <p className="text-gray-500 text-xs">{type}</p>
-        <p className="font-semibold">Starting at USD {price}/day</p>
-        <p className="text-xs">{address}</p>
-        <p className="text-xs">
-          {size} m² • {bedrooms} bedrooms • {spots} parking spots
+        <p className="font-semibold">Starting at <span className="text-green-500">${price}</span>/day</p>
+        <div className="flex items-center text-xs">
+          <span className="text-yellow-600">{address}</span>
+          <button onClick={copyToClipboard} className="ml-2">
+            <Image src="/papeis.png" width={16} height={16} alt="Copy" />
+          </button>
+        </div>
+        <p className="text-xs text-blue-800">
+          {size} m² • {bedrooms} bedrooms
         </p>
       </div>
     </div>

@@ -17,6 +17,7 @@ const CardList = ({ filteredRentals }) => {
           size={rental?.size}
           spots={rental?.spots}
           image={rental?.image}
+          contract={rental?.contract}
         />
       ))}
     </div>
